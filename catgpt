@@ -1,0 +1,46 @@
+#!/opt/homebrew/bin/python3
+import glob
+import os
+from pathlib import Path
+import sys
+
+def list_files(directory):
+    path = Path(directory)
+    return [str(file) for file in path.rglob('*') if file.is_file()]
+
+args = sys.argv[1:]
+
+all = []
+for arg in sys.argv[1:]:
+    all.extend(glob.glob(arg))
+
+all_files = []
+for file in all:
+    if os.path.isdir(file):
+        all_files.extend(list_files(file))
+    else:
+        all_files.append(str(file))
+
+prompt = """
+INTRODUCTION TO MY QUESTION:
+---------------------------
+
+The following are a collection of files from a
+python package which I am working on. Please answer the provided
+question taking into account the contents of the files.
+
+LIST OF FILES AND CONTENTS:
+--------------------------
+"""
+
+
+print(prompt)
+for file in all_files:
+    print('FILENAME: ---------------------------------------')
+    print(file)
+    print('-------------------------------------------------')
+    with open(file, 'r') as f:
+        print(f.read())
+
+
+print('QUESTION: -------------------------------------------')
